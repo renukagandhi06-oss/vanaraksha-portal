@@ -1,0 +1,232 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VanaRaksha — Community Tree Plantation and Green Cover Monitoring Portal</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
+  <!-- Firebase Compat SDK (100% Free Spark Plan Firestore Sync) -->
+  <script src="https://www.gstatic.com/firebasejs/13.3.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/13.3.0/firebase-firestore-compat.js"></script>
+  <style>
+    body {
+      font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: #f4f7f5;
+      color: #0f172a;
+    }
+    .tab-panel {
+      display: none;
+    }
+    .tab-panel.active {
+      display: block;
+    }
+    .modal-backdrop {
+      display: none;
+    }
+    .modal-backdrop.open {
+      display: flex;
+    }
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col pb-20 md:pb-8">
+
+  <!-- Sticky Top Navigation -->
+  <header class="sticky top-0 z-30 bg-white/95 backdrop-blur border-b border-emerald-100 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-3">
+      <!-- Brand -->
+      <div class="flex items-center gap-2.5 min-w-0">
+        <div class="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-sm">
+          <i data-lucide="trees" class="w-5 h-5"></i>
+        </div>
+        <div class="min-w-0">
+          <div class="flex items-center gap-2">
+            <h1 class="text-base sm:text-lg font-bold tracking-tight text-slate-900 truncate leading-tight">VanaRaksha</h1>
+            <span id="cloud-status-pill" class="inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200 shrink-0">
+              <span id="cloud-status-dot" class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
+              <span id="cloud-status-text">Connecting...</span>
+            </span>
+          </div>
+          <p class="text-[11px] sm:text-xs text-emerald-700 font-medium truncate">Community Tree Plantation &amp; Green Cover Portal</p>
+        </div>
+      </div>
+
+      <!-- Desktop Navigation Tabs -->
+      <nav class="hidden md:flex items-center gap-1 bg-slate-100/90 p-1 rounded-xl" aria-label="Primary Navigation">
+        <button type="button" data-nav="dashboard" class="nav-btn px-3.5 py-1.5 rounded-lg text-sm font-semibold transition flex items-center gap-1.5 bg-white text-emerald-700 shadow-sm">
+          <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+          <span>Dashboard</span>
+        </button>
+        <button type="button" data-nav="registry" class="nav-btn px-3.5 py-1.5 rounded-lg text-sm font-medium transition flex items-center gap-1.5 text-slate-600 hover:text-slate-900">
+          <i data-lucide="clipboard-list" class="w-4 h-4"></i>
+          <span>Tree Registry</span>
+        </button>
+        <button type="button" data-nav="saved" class="nav-btn px-3.5 py-1.5 rounded-lg text-sm font-medium transition flex items-center gap-1.5 text-slate-600 hover:text-slate-900">
+          <i data-lucide="bookmark-check" class="w-4 h-4"></i>
+          <span>Saved Records</span>
+        </button>
+      </nav>
+
+      <!-- Primary CTA -->
+      <div class="flex items-center gap-2 shrink-0">
+        <button type="button" id="btn-open-add-modal" class="inline-flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] text-white text-xs sm:text-sm font-semibold px-3.5 py-2 rounded-xl shadow-sm transition">
+          <i data-lucide="plus-circle" class="w-4 h-4"></i>
+          <span>Log Tree</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 pt-5 space-y-6">
+
+    <!-- ==================== VIEW 1: DASHBOARD ==================== -->
+    <section id="view-dashboard" class="tab-panel active space-y-6">
+      <!-- Hero Banner -->
+      <div class="rounded-2xl bg-gradient-to-r from-emerald-800 via-emerald-700 to-teal-700 text-white p-5 sm:p-6 shadow-sm flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div class="space-y-1.5 max-w-2xl">
+          <div class="inline-flex items-center gap-1.5 text-xs font-semibold bg-white/15 px-2.5 py-1 rounded-full">
+            <span class="w-2 h-2 rounded-full bg-emerald-300"></span>
+            <span>NGO &amp; Community Live Cloud Monitoring Portal</span>
+          </div>
+          <h2 class="text-xl sm:text-2xl font-bold tracking-tight">Community Tree Plantation and Green Cover Monitoring Portal</h2>
+          <p class="text-emerald-50/90 text-sm leading-relaxed">
+            Search any street, village, city, state, or country—or detect your live GPS—to register planted trees with real-time cloud sync across all volunteer phones and laptops.
+          </p>
+        </div>
+        <div class="flex flex-wrap gap-2 shrink-0">
+          <button type="button" id="btn-hero-log" class="px-4 py-2 rounded-xl bg-white text-emerald-800 hover:bg-emerald-50 text-sm font-semibold transition inline-flex items-center gap-1.5 shadow-sm">
+            <i data-lucide="plus-circle" class="w-4 h-4"></i>
+            <span>Register Tree</span>
+          </button>
+          <button type="button" id="btn-hero-saved" class="px-4 py-2 rounded-xl bg-emerald-900/50 hover:bg-emerald-900/70 border border-white/20 text-white text-sm font-semibold transition inline-flex items-center gap-1.5">
+            <i data-lucide="bookmark-check" class="w-4 h-4"></i>
+            <span>Saved Records</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Empty-State Onboarding Banner -->
+      <div id="empty-onboarding-banner" class="hidden rounded-2xl bg-emerald-50 border border-emerald-200 p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div class="space-y-1">
+          <h3 class="text-sm sm:text-base font-bold text-emerald-950">Ready for Real Field Data — Zero Dummy Entries</h3>
+          <p class="text-xs sm:text-sm text-emerald-800 leading-relaxed">
+            No sample or placeholder records are pre-loaded. Click <strong>Log Tree</strong>, search any location worldwide (or tap <strong>Use My Location</strong>), and register your first real tree.
+          </p>
+        </div>
+        <button type="button" id="btn-onboarding-log" class="shrink-0 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-semibold shadow-sm transition inline-flex items-center justify-center gap-1.5">
+          <i data-lucide="plus-circle" class="w-4 h-4"></i>
+          <span>Log First Real Tree</span>
+        </button>
+      </div>
+
+      <!-- KPI Cards -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        <div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/80 shadow-sm">
+          <div class="flex items-center justify-between text-slate-500 text-xs font-semibold uppercase tracking-wide">
+            <span>Trees Logged</span>
+            <i data-lucide="sprout" class="w-4 h-4 text-emerald-600"></i>
+          </div>
+          <div id="kpi-total-trees" class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-2">0</div>
+          <p id="kpi-saplings-sub" class="text-xs text-slate-500 mt-1">0 saplings tracked</p>
+        </div>
+
+        <div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/80 shadow-sm">
+          <div class="flex items-center justify-between text-slate-500 text-xs font-semibold uppercase tracking-wide">
+            <span>Healthy Rate</span>
+            <i data-lucide="heart-pulse" class="w-4 h-4 text-emerald-600"></i>
+          </div>
+          <div id="kpi-healthy-rate" class="text-2xl sm:text-3xl font-extrabold text-emerald-700 mt-2">0%</div>
+          <p id="kpi-attention-sub" class="text-xs text-slate-500 mt-1">0 needing attention</p>
+        </div>
+
+        <div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/80 shadow-sm">
+          <div class="flex items-center justify-between text-slate-500 text-xs font-semibold uppercase tracking-wide">
+            <span>Est. CO<sub>2</sub> Offset</span>
+            <i data-lucide="wind" class="w-4 h-4 text-teal-600"></i>
+          </div>
+          <div id="kpi-co2" class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-2">0 kg</div>
+          <p class="text-xs text-slate-500 mt-1">Per year (USDA 22 kg mature ref.)</p>
+        </div>
+
+        <div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/80 shadow-sm">
+          <div class="flex items-center justify-between text-slate-500 text-xs font-semibold uppercase tracking-wide">
+            <span>Locations Covered</span>
+            <i data-lucide="map-pinned" class="w-4 h-4 text-amber-600"></i>
+          </div>
+          <div id="kpi-zones" class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-2">0</div>
+          <p id="kpi-countries-sub" class="text-xs text-slate-500 mt-1">0 cities / areas</p>
+        </div>
+      </div>
+
+      <!-- Charts Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+        <div class="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm">
+          <div class="flex items-center justify-between mb-3">
+            <div>
+              <h3 class="text-base font-bold text-slate-900">Species Distribution</h3>
+              <p class="text-xs text-slate-500">Live count of logged tree species</p>
+            </div>
+            <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700">Live Data</span>
+          </div>
+          <div class="relative h-72">
+            <canvas id="chart-species"></canvas>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm">
+          <div class="flex items-center justify-between mb-3">
+            <div>
+              <h3 class="text-base font-bold text-slate-900">Green Cover Health by Location</h3>
+              <p class="text-xs text-slate-500">Healthy vs. Needs Water vs. At Risk across logged cities/areas</p>
+            </div>
+            <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-teal-50 text-teal-700">Audit Status</span>
+          </div>
+          <div class="relative h-72">
+            <canvas id="chart-zones"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Logs & Live Sync Info -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+        <div class="lg:col-span-2 bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm space-y-3">
+          <div class="flex items-center justify-between">
+            <h3 class="text-base font-bold text-slate-900">Recent Plantation Logs</h3>
+            <button type="button" id="btn-view-all-saved" class="text-xs font-semibold text-emerald-700 hover:text-emerald-800">Open Saved Records &rarr;</button>
+          </div>
+          <div id="dashboard-recent-list" class="divide-y divide-slate-100"></div>
+        </div>
+
+        <div class="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm flex flex-col justify-between gap-4">
+          <div class="space-y-2">
+            <div class="flex items-center gap-2 text-slate-900 font-bold text-base">
+              <i data-lucide="cloud" class="w-4 h-4 text-emerald-600"></i>
+              <span>Live Cloud Sync (Firebase)</span>
+            </div>
+            <p class="text-xs text-slate-600 leading-relaxed">
+              Every tree you register syncs in real time to your free Firebase Firestore database and appears automatically across phones, laptops, and page refreshes.
+            </p>
+          </div>
+          <div class="flex flex-col gap-2">
+            <button type="button" id="btn-open-saved-card" class="w-full px-3 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold transition inline-flex items-center justify-center gap-1.5 shadow-sm">
+              <i data-lucide="bookmark-check" class="w-3.5 h-3.5"></i>
+              <span>Go to Saved Records</span>
+            </button>
+            <button type="button" id="btn-clear-data" class="w-full px-3 py-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-semibold transition inline-flex items-center justify-center gap-1.5">
+              <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+              <span>Clear All Records</span>
+            </button>
+          </div>
+        </div>
