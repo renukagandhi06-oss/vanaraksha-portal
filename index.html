@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,6 +9,9 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
+  <!-- Firebase Compat SDK (100% Free Spark Plan Firestore Sync) -->
+  <script src="https://www.gstatic.com/firebasejs/13.3.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/13.3.0/firebase-firestore-compat.js"></script>
   <style>
     body {
       font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -47,12 +51,18 @@
           <i data-lucide="trees" class="w-5 h-5"></i>
         </div>
         <div class="min-w-0">
-          <h1 class="text-base sm:text-lg font-bold tracking-tight text-slate-900 truncate leading-tight">VanaRaksha</h1>
+          <div class="flex items-center gap-2">
+            <h1 class="text-base sm:text-lg font-bold tracking-tight text-slate-900 truncate leading-tight">VanaRaksha</h1>
+            <span id="cloud-status-pill" class="inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200 shrink-0">
+              <span id="cloud-status-dot" class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
+              <span id="cloud-status-text">Connecting...</span>
+            </span>
+          </div>
           <p class="text-[11px] sm:text-xs text-emerald-700 font-medium truncate">Community Tree Plantation &amp; Green Cover Portal</p>
         </div>
       </div>
 
-      <!-- Desktop Navigation Tabs (3 Focused Sections) -->
+      <!-- Desktop Navigation Tabs -->
       <nav class="hidden md:flex items-center gap-1 bg-slate-100/90 p-1 rounded-xl" aria-label="Primary Navigation">
         <button type="button" data-nav="dashboard" class="nav-btn px-3.5 py-1.5 rounded-lg text-sm font-semibold transition flex items-center gap-1.5 bg-white text-emerald-700 shadow-sm">
           <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
@@ -88,11 +98,11 @@
         <div class="space-y-1.5 max-w-2xl">
           <div class="inline-flex items-center gap-1.5 text-xs font-semibold bg-white/15 px-2.5 py-1 rounded-full">
             <span class="w-2 h-2 rounded-full bg-emerald-300"></span>
-            <span>NGO &amp; Community Field Monitoring Portal</span>
+            <span>NGO &amp; Community Live Cloud Monitoring Portal</span>
           </div>
           <h2 class="text-xl sm:text-2xl font-bold tracking-tight">Community Tree Plantation and Green Cover Monitoring Portal</h2>
           <p class="text-emerald-50/90 text-sm leading-relaxed">
-            Search and select real street, city, state, and country addresses to register planted trees, monitor sapling health, and keep permanent plantation records across sessions.
+            Search any street, village, city, state, or country—or detect your live GPS—to register planted trees with real-time cloud sync across all volunteer phones and laptops.
           </p>
         </div>
         <div class="flex flex-wrap gap-2 shrink-0">
@@ -112,7 +122,7 @@
         <div class="space-y-1">
           <h3 class="text-sm sm:text-base font-bold text-emerald-950">Ready for Real Field Data — Zero Dummy Entries</h3>
           <p class="text-xs sm:text-sm text-emerald-800 leading-relaxed">
-            No sample or placeholder records are pre-loaded. Click <strong>Log Tree</strong>, type any area, city, state, or country to select the real address, and register your first tree.
+            No sample or placeholder records are pre-loaded. Click <strong>Log Tree</strong>, search any location worldwide (or tap <strong>Use My Location</strong>), and register your first real tree.
           </p>
         </div>
         <button type="button" id="btn-onboarding-log" class="shrink-0 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-semibold shadow-sm transition inline-flex items-center justify-center gap-1.5">
@@ -189,7 +199,7 @@
         </div>
       </div>
 
-      <!-- Recent Logs & Quick Storage Controls -->
+      <!-- Recent Logs & Live Sync Info -->
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
         <div class="lg:col-span-2 bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm space-y-3">
           <div class="flex items-center justify-between">
@@ -202,11 +212,11 @@
         <div class="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm flex flex-col justify-between gap-4">
           <div class="space-y-2">
             <div class="flex items-center gap-2 text-slate-900 font-bold text-base">
-              <i data-lucide="hard-drive" class="w-4 h-4 text-emerald-600"></i>
-              <span>Persistent Local Storage</span>
+              <i data-lucide="cloud" class="w-4 h-4 text-emerald-600"></i>
+              <span>Live Cloud Sync (Firebase)</span>
             </div>
             <p class="text-xs text-slate-600 leading-relaxed">
-              Every tree you log is saved automatically in your browser and stays listed in the <strong>Saved Records</strong> tab even if you refresh or reopen the portal later.
+              Every tree you register syncs in real time to your free Firebase Firestore database and appears automatically across phones, laptops, and page refreshes.
             </p>
           </div>
           <div class="flex flex-col gap-2">
@@ -216,14 +226,14 @@
             </button>
             <button type="button" id="btn-clear-data" class="w-full px-3 py-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-semibold transition inline-flex items-center justify-center gap-1.5">
               <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
-              <span>Clear All Saved Records</span>
+              <span>Clear All Records</span>
             </button>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ==================== VIEW 2: TREE REGISTRY (ACTIVE MANAGEMENT) ==================== -->
+    <!-- ==================== VIEW 2: TREE REGISTRY ==================== -->
     <section id="view-registry" class="tab-panel space-y-4">
       <div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/80 shadow-sm space-y-4">
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
@@ -261,18 +271,18 @@
       <div id="registry-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
     </section>
 
-    <!-- ==================== VIEW 3: SAVED RECORDS (PERSISTENT LOGBOOK) ==================== -->
+    <!-- ==================== VIEW 3: SAVED RECORDS (CLOUD-SYNCED LOGBOOK) ==================== -->
     <section id="view-saved" class="tab-panel space-y-4">
       <div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/80 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <div class="flex items-center gap-2 flex-wrap">
             <h2 class="text-lg font-bold text-slate-900">Saved Plantation Records</h2>
-            <span class="inline-flex items-center gap-1 text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+            <span id="saved-sync-badge" class="inline-flex items-center gap-1 text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
               <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-              Auto-Saved Across Refreshes
+              Synced Across All Devices
             </span>
           </div>
-          <p class="text-xs text-slate-500 mt-0.5">Every tree you register is permanently stored here on this device—even after refreshing or closing the browser.</p>
+          <p class="text-xs text-slate-500 mt-0.5">Every registered tree is permanently stored in Firebase Cloud Firestore and remains here across refreshes and devices.</p>
         </div>
         <div class="flex items-center gap-2 shrink-0">
           <span id="saved-total-badge" class="text-xs font-bold text-slate-700 bg-slate-100 px-3 py-1.5 rounded-xl">0 Saved</span>
@@ -283,13 +293,13 @@
         </div>
       </div>
 
-      <!-- Persistent Logbook Table / Cards -->
+      <!-- Persistent Logbook Cards -->
       <div id="saved-records-container" class="space-y-3"></div>
     </section>
 
   </main>
 
-  <!-- Mobile Bottom Navigation Bar (3 Tabs) -->
+  <!-- Mobile Bottom Navigation Bar -->
   <nav class="md:hidden fixed bottom-0 inset-x-0 z-30 bg-white border-t border-slate-200 px-2 py-1.5 grid grid-cols-3 gap-1 shadow-lg" aria-label="Mobile Navigation">
     <button type="button" data-nav="dashboard" class="mobile-nav-btn flex flex-col items-center justify-center py-1 rounded-xl text-[11px] font-semibold text-emerald-700 bg-emerald-50">
       <i data-lucide="layout-dashboard" class="w-5 h-5 mb-0.5"></i>
@@ -305,981 +315,26 @@
     </button>
   </nav>
 
-  <!-- ==================== MODAL: LOG NEW TREE (WITH ADDRESS SEARCH) ==================== -->
+  <!-- ==================== MODAL: LOG NEW TREE (PHOTON + NOMINATIM + LIVE GPS) ==================== -->
   <div id="modal-add-tree" class="modal-backdrop fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm items-center justify-center p-4">
     <div class="bg-white rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-xl border border-slate-200">
       <div class="sticky top-0 bg-white px-5 py-4 border-b border-slate-100 flex items-center justify-between z-10">
         <div>
           <h3 class="text-base font-bold text-slate-900">Register Tree Plantation</h3>
-          <p class="text-xs text-slate-500">Search an address, click to select it, and save permanently</p>
+          <p class="text-xs text-slate-500">Search any worldwide address or use live GPS, then click to select</p>
         </div>
         <button type="button" data-close-modal="modal-add-tree" class="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100">
           <i data-lucide="x" class="w-5 h-5"></i>
         </button>
       </div>
       <form id="form-add-tree" class="p-5 space-y-4">
-        <!-- Address Search & Click-to-Select Block -->
+        <!-- Upgraded All-Locations Search Block -->
         <div class="bg-emerald-50/70 border border-emerald-200 rounded-xl p-3.5 space-y-2.5">
-          <div class="flex items-center justify-between gap-2">
-            <label for="address-search-input" class="text-xs font-bold text-emerald-950">Search Address (Area, City, State, Country)</label>
-            <button type="button" id="btn-toggle-manual-addr" class="text-[11px] font-semibold text-emerald-700 hover:text-emerald-900 underline">Enter manually</button>
-          </div>
-          <div class="flex gap-2">
-            <input id="address-search-input" type="text" placeholder="e.g., Koramangala, Bengaluru, Karnataka, India" class="flex-1 px-3 py-2 text-sm rounded-xl border border-emerald-200 bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500" />
-            <button type="button" id="btn-search-address" class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold transition shrink-0 inline-flex items-center gap-1">
-              <i data-lucide="search" class="w-3.5 h-3.5"></i>
-              <span>Find</span>
-            </button>
-          </div>
-
-          <!-- Search Status -->
-          <p id="address-search-status" class="text-[11px] text-emerald-800">Type a place name and click <strong>Find</strong>, then click a result below to select it.</p>
-
-          <!-- Search Results List -->
-          <div id="address-results-list" class="hidden max-h-44 overflow-y-auto space-y-1.5 pt-1"></div>
-
-          <!-- Selected Address Preview Chip -->
-          <div id="selected-address-box" class="hidden rounded-xl bg-white border border-emerald-300 p-2.5 flex items-start justify-between gap-2">
-            <div class="min-w-0">
-              <div class="text-[10px] font-bold uppercase tracking-wider text-emerald-700">Selected Location ✓</div>
-              <div id="selected-address-text" class="text-xs font-semibold text-slate-900 leading-snug mt-0.5"></div>
-              <div id="selected-address-meta" class="text-[11px] text-slate-500 mt-0.5"></div>
-            </div>
-            <button type="button" id="btn-clear-selected-addr" class="text-[11px] font-semibold text-rose-600 hover:text-rose-700 shrink-0">Change</button>
-          </div>
-
-          <!-- Manual Address Fallback Fields -->
-          <div id="manual-address-fields" class="hidden grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
-            <input id="manual-area" type="text" placeholder="Street / Area / Landmark" class="px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500" />
-            <input id="manual-city" type="text" placeholder="City (e.g., Bengaluru)" class="px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500" />
-            <input id="manual-state" type="text" placeholder="State (e.g., Karnataka)" class="px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500" />
-            <input id="manual-country" type="text" placeholder="Country (e.g., India)" class="px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500" />
-          </div>
-        </div>
-
-        <!-- Species & Stage -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div>
-            <label for="tree-species" class="block text-xs font-semibold text-slate-700 mb-1">Tree Species</label>
-            <select id="tree-species" class="w-full px-3 py-2 text-sm rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
-              <option value="Neem|Azadirachta indica">Neem (Azadirachta indica)</option>
-              <option value="Peepal|Ficus religiosa">Peepal (Ficus religiosa)</option>
-              <option value="Honge / Pongamia|Millettia pinnata">Honge / Pongamia (Millettia pinnata)</option>
-              <option value="Arjuna|Terminalia arjuna">Arjuna (Terminalia arjuna)</option>
-              <option value="Indian Tulip|Thespesia populnea">Indian Tulip (Thespesia populnea)</option>
-              <option value="Flame of the Forest|Butea monosperma">Flame of the Forest (Butea monosperma)</option>
-              <option value="CUSTOM">Other / Custom Species...</option>
-            </select>
-          </div>
-          <div>
-            <label for="tree-stage" class="block text-xs font-semibold text-slate-700 mb-1">Growth Stage</label>
-            <select id="tree-stage" class="w-full px-3 py-2 text-sm rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
-              <option value="Sapling">Sapling (~4 kg CO2/yr)</option>
-              <option value="Young">Young (~11 kg CO2/yr)</option>
-              <option value="Mature">Mature (~22 kg CO2/yr)</option>
-            </select>
-          </div>
-        </div>
-
-        <div id="custom-species-wrap" class="hidden grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div>
-            <label for="tree-custom-species" class="block text-xs font-semibold text-slate-700 mb-1">Custom Common Name</label>
-            <input id="tree-custom-species" type="text" placeholder="e.g., Banyan or Mango" class="w-full px-3 py-2 text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500" />
-          </div>
-          <div>
-            <label for="tree-custom-botanical" class="block text-xs font-semibold text-slate-700 mb-1">Botanical Name (Optional)</label>
-            <input id="tree-custom-botanical" type="text" placeholder="e.g., Ficus benghalensis" class="w-full px-3 py-2 text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500" />
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div>
-            <label for="tree-status" class="block text-xs font-semibold text-slate-700 mb-1">Initial Health Status</label>
-            <select id="tree-status" class="w-full px-3 py-2 text-sm rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
-              <option value="Healthy">Healthy</option>
-              <option value="Needs Water">Needs Water</option>
-              <option value="At Risk">At Risk</option>
-            </select>
-          </div>
-          <div>
-            <label for="tree-planter" class="block text-xs font-semibold text-slate-700 mb-1">Planted / Logged By</label>
-            <input id="tree-planter" type="text" required placeholder="Volunteer or NGO team name" class="w-full px-3 py-2 text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500" />
-          </div>
-        </div>
-
-        <div>
-          <label for="tree-notes" class="block text-xs font-semibold text-slate-700 mb-1">Field Notes (Optional)</label>
-          <input id="tree-notes" type="text" placeholder="e.g., Tree guard installed, watered 5L" class="w-full px-3 py-2 text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500" />
-        </div>
-
-        <div>
-          <label for="tree-photo" class="block text-xs font-semibold text-slate-700 mb-1">Field Photo (Optional, saved locally)</label>
-          <input id="tree-photo" type="file" accept="image/*" capture="environment" class="w-full text-xs text-slate-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100" />
-        </div>
-
-        <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
-          <button type="button" data-close-modal="modal-add-tree" class="px-4 py-2 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100 transition">Cancel</button>
-          <button type="submit" class="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold shadow-sm transition">Register &amp; Save Tree</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- ==================== MODAL: TREE PASSPORT ==================== -->
-  <div id="modal-passport" class="modal-backdrop fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm items-center justify-center p-4">
-    <div class="bg-white rounded-2xl w-full max-w-md overflow-hidden shadow-xl border border-slate-200">
-      <div class="bg-emerald-700 text-white px-5 py-4 flex items-center justify-between">
-        <div>
-          <p class="text-[11px] uppercase tracking-wider font-semibold text-emerald-200">VanaRaksha Scannable Passport</p>
-          <h3 id="passport-id" class="text-lg font-extrabold tracking-tight">VR-1001</h3>
-        </div>
-        <button type="button" data-close-modal="modal-passport" class="p-1.5 rounded-lg text-emerald-100 hover:bg-white/10">
-          <i data-lucide="x" class="w-5 h-5"></i>
-        </button>
-      </div>
-      <div id="passport-body" class="p-5 space-y-4"></div>
-    </div>
-  </div>
-
-  <!-- ==================== MODAL: IN-PAGE CONFIRMATION ==================== -->
-  <div id="modal-confirm" class="modal-backdrop fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm items-center justify-center p-4">
-    <div class="bg-white rounded-2xl w-full max-w-sm p-5 shadow-xl border border-slate-200 space-y-4">
-      <div class="space-y-1">
-        <h3 id="confirm-title" class="text-base font-bold text-slate-900">Confirm Action</h3>
-        <p id="confirm-message" class="text-sm text-slate-600">Are you sure?</p>
-      </div>
-      <div class="flex items-center justify-end gap-2">
-        <button type="button" data-close-modal="modal-confirm" class="px-4 py-2 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100">Cancel</button>
-        <button type="button" id="btn-confirm-proceed" class="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-sm font-semibold">Confirm</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Toast Container -->
-  <div id="toast-container" class="fixed bottom-20 md:bottom-6 right-4 z-50 flex flex-col gap-2 pointer-events-none"></div>
-
-  <script>
-    (function () {
-      'use strict';
-
-      // ==================== CONSTANTS ====================
-      const STORAGE_KEY_TREES = 'vanaraksha_saved_trees_v3';
-
-      // USDA Forest Service mature-tree reference (~22 kg CO2/yr)
-      const CO2_BY_STAGE = {
-        'Sapling': 4,
-        'Young': 11,
-        'Mature': 22
-      };
-
-      // ==================== STATE (100% REAL PERSISTENT DATA) ====================
-      let state = {
-        activeTab: 'dashboard',
-        trees: [],
-        selectedLocation: null,
-        manualAddressMode: false,
-        pendingConfirmAction: null
-      };
-
-      let speciesChart = null;
-      let zoneChart = null;
-      let searchDebounceTimer = null;
-
-      // ==================== STORAGE HELPERS ====================
-      function loadState() {
-        try {
-          const savedTrees = localStorage.getItem(STORAGE_KEY_TREES);
-          state.trees = savedTrees ? JSON.parse(savedTrees) : [];
-        } catch (err) {
-          state.trees = [];
-        }
-      }
-
-      function saveState() {
-        try {
-          localStorage.setItem(STORAGE_KEY_TREES, JSON.stringify(state.trees));
-        } catch (err) {
-          showToast('Saved in session memory (browser storage full or restricted).', 'amber');
-        }
-      }
-
-      // ==================== UTILITIES ====================
-      function todayISO() {
-        const d = new Date();
-        const pad = (n) => String(n).padStart(2, '0');
-        return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
-      }
-
-      function escapeHtml(str) {
-        return String(str || '')
-          .replace(/&/g, '&amp;')
-          .replace(/</g, '&lt;')
-          .replace(/>/g, '&gt;')
-          .replace(/"/g, '&quot;')
-          .replace(/'/g, '&#39;');
-      }
-
-      function statusBadgeClass(status) {
-        if (status === 'Healthy') return 'bg-emerald-50 text-emerald-700 border-emerald-200';
-        if (status === 'Needs Water') return 'bg-amber-50 text-amber-700 border-amber-200';
-        return 'bg-rose-50 text-rose-700 border-rose-200';
-      }
-
-      function showToast(message, tone = 'emerald') {
-        const container = document.getElementById('toast-container');
-        if (!container) return;
-        const colors = {
-          emerald: 'bg-emerald-800 text-white',
-          amber: 'bg-amber-600 text-white',
-          rose: 'bg-rose-700 text-white',
-          slate: 'bg-slate-800 text-white'
-        };
-        const el = document.createElement('div');
-        el.className = `pointer-events-auto px-4 py-2.5 rounded-xl shadow-lg text-xs sm:text-sm font-medium ${colors[tone] || colors.emerald} transition-all duration-200`;
-        el.textContent = message;
-        container.appendChild(el);
-        setTimeout(() => {
-          el.style.opacity = '0';
-          setTimeout(() => el.remove(), 220);
-        }, 3000);
-      }
-
-      function buildRealQRMarkup(payloadText) {
-        if (typeof qrcode === 'function') {
-          try {
-            const qr = qrcode(0, 'M');
-            qr.addData(payloadText);
-            qr.make();
-            return `<div class="w-28 h-28 p-1.5 rounded-xl border border-emerald-200 bg-white shrink-0 flex items-center justify-center [&>svg]:w-full [&>svg]:h-full">${qr.createSvgTag({ scalable: true, margin: 1 })}</div>`;
-          } catch (err) {
-            // fallback
-          }
-        }
-        return `<div class="w-28 h-28 rounded-xl border border-emerald-200 bg-emerald-50 flex items-center justify-center text-[11px] font-bold text-emerald-800 text-center p-2 shrink-0">${escapeHtml(payloadText)}</div>`;
-      }
-
-      // ==================== ADDRESS SEARCH (OPENSTREETMAP NOMINATIM) ====================
-      async function searchAddresses(query) {
-        const q = (query || '').trim();
-        const statusEl = document.getElementById('address-search-status');
-        const listEl = document.getElementById('address-results-list');
-
-        if (q.length < 3) {
-          statusEl.textContent = 'Type at least 3 characters (e.g., city, area, state, or country) and click Find.';
-          listEl.classList.add('hidden');
-          listEl.innerHTML = '';
-          return;
-        }
-
-        statusEl.textContent = 'Searching matching addresses...';
-        listEl.classList.add('hidden');
-
-        try {
-          const url = `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&limit=5&q=${encodeURIComponent(q)}`;
-          const res = await fetch(url, { headers: { 'Accept': 'application/json' } });
-          if (!res.ok) throw new Error('Search service busy');
-          const items = await res.json();
-
-          if (!Array.isArray(items) || items.length === 0) {
-            statusEl.textContent = 'No exact address found. Try adding the city/country, or click "Enter manually" above.';
-            listEl.classList.add('hidden');
-            return;
-          }
-
-          statusEl.textContent = `Found ${items.length} matching address${items.length === 1 ? '' : 'es'} — click one to select:`;
-          listEl.innerHTML = items.map((item, idx) => {
-            const addr = item.address || {};
-            const city = addr.city || addr.town || addr.village || addr.suburb || addr.county || '';
-            const stateName = addr.state || '';
-            const country = addr.country || '';
-            const shortLoc = [city, stateName, country].filter(Boolean).join(', ');
-            return `
-              <button type="button" data-pick-idx="${idx}" class="w-full text-left p-2.5 rounded-xl bg-white hover:bg-emerald-100/70 border border-emerald-200/80 transition block">
-                <div class="text-xs font-semibold text-slate-900 leading-snug">${escapeHtml(item.display_name)}</div>
-                <div class="text-[11px] text-emerald-700 mt-0.5">${escapeHtml(shortLoc || 'Verified Place')} &middot; ${Number(item.lat).toFixed(4)}, ${Number(item.lon).toFixed(4)}</div>
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <label for="address-search-input" class="text-xs font-bold text-emerald-950">Search Any Location (Street, Area, City, State, Country)</label>
+            <div class="flex items-center gap-2">
+              <button type="button" id="btn-detect-location" class="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-semibold transition inline-flex items-center gap-1">
+                <i data-lucide="locate-fixed" class="w-3 h-3"></i>
+                <span>Use My Location</span>
               </button>
-            `;
-          }).join('');
-
-          listEl.classList.remove('hidden');
-
-          // Attach click listeners directly to rendered address results
-          listEl.querySelectorAll('[data-pick-idx]').forEach((btn) => {
-            btn.addEventListener('click', () => {
-              const chosen = items[Number(btn.dataset.pickIdx)];
-              if (!chosen) return;
-              const addr = chosen.address || {};
-              const city = addr.city || addr.town || addr.village || addr.suburb || addr.county || chosen.display_name.split(',')[0].trim();
-              const stateName = addr.state || '';
-              const country = addr.country || '';
-              state.selectedLocation = {
-                fullAddress: chosen.display_name,
-                city,
-                state: stateName,
-                country,
-                shortLabel: [city, stateName, country].filter(Boolean).join(', ') || chosen.display_name,
-                lat: Number(chosen.lat),
-                lng: Number(chosen.lon)
-              };
-              state.manualAddressMode = false;
-              renderSelectedLocationUI();
-              showToast('Address selected! Fill species & planter to register.');
-            });
-          });
-        } catch (err) {
-          statusEl.textContent = 'Address search is temporarily unreachable. Click "Enter manually" above to type City, State & Country directly.';
-          listEl.classList.add('hidden');
-        }
-      }
-
-      function renderSelectedLocationUI() {
-        const box = document.getElementById('selected-address-box');
-        const listEl = document.getElementById('address-results-list');
-        const manualWrap = document.getElementById('manual-address-fields');
-        const toggleBtn = document.getElementById('btn-toggle-manual-addr');
-
-        if (state.manualAddressMode) {
-          manualWrap.classList.remove('hidden');
-          box.classList.add('hidden');
-          listEl.classList.add('hidden');
-          toggleBtn.textContent = 'Use address search';
-          return;
-        }
-
-        manualWrap.classList.add('hidden');
-        toggleBtn.textContent = 'Enter manually';
-
-        if (state.selectedLocation) {
-          document.getElementById('selected-address-text').textContent = state.selectedLocation.fullAddress;
-          document.getElementById('selected-address-meta').textContent = `${state.selectedLocation.shortLabel}${state.selectedLocation.lat ? ` · GPS ${state.selectedLocation.lat.toFixed(4)}, ${state.selectedLocation.lng.toFixed(4)}` : ''}`;
-          box.classList.remove('hidden');
-          listEl.classList.add('hidden');
-        } else {
-          box.classList.add('hidden');
-        }
-      }
-
-      // ==================== RENDERING: DASHBOARD ====================
-      function renderDashboard() {
-        const total = state.trees.length;
-        const healthy = state.trees.filter((t) => t.status === 'Healthy').length;
-        const attention = total - healthy;
-        const healthyPct = total > 0 ? Math.round((healthy / total) * 100) : 0;
-        const totalCo2 = state.trees.reduce((sum, t) => sum + (CO2_BY_STAGE[t.stage] || 4), 0);
-        const citiesSet = new Set(state.trees.map((t) => t.city || t.shortLabel || 'Unspecified'));
-        const countriesSet = new Set(state.trees.map((t) => t.country).filter(Boolean));
-        const saplingsCount = state.trees.filter((t) => t.stage === 'Sapling').length;
-
-        const banner = document.getElementById('empty-onboarding-banner');
-        if (banner) {
-          if (total === 0) banner.classList.remove('hidden');
-          else banner.classList.add('hidden');
-        }
-
-        document.getElementById('kpi-total-trees').textContent = String(total);
-        document.getElementById('kpi-saplings-sub').textContent = `${saplingsCount} saplings tracked`;
-        document.getElementById('kpi-healthy-rate').textContent = `${healthyPct}%`;
-        document.getElementById('kpi-attention-sub').textContent = `${attention} needing water or care`;
-        document.getElementById('kpi-co2').textContent = `${totalCo2} kg`;
-        document.getElementById('kpi-zones').textContent = String(citiesSet.size);
-        document.getElementById('kpi-countries-sub').textContent = countriesSet.size > 0
-          ? `Across ${countriesSet.size} countr${countriesSet.size === 1 ? 'y' : 'ies'}`
-          : `${citiesSet.size} cities / areas`;
-
-        const recentEl = document.getElementById('dashboard-recent-list');
-        if (total === 0) {
-          recentEl.innerHTML = `<p class="text-sm text-slate-500 py-6 text-center">No trees logged yet. Click <strong>Log Tree</strong> to search an address and register your first tree.</p>`;
-        } else {
-          const recent = state.trees.slice(0, 5);
-          recentEl.innerHTML = recent.map((t) => `
-            <div class="py-3 flex items-center justify-between gap-3">
-              <div class="min-w-0">
-                <div class="flex items-center gap-2 flex-wrap">
-                  <span class="text-xs font-bold text-emerald-700">${escapeHtml(t.id)}</span>
-                  <span class="text-sm font-semibold text-slate-900 truncate">${escapeHtml(t.species)}</span>
-                  <span class="text-[11px] font-semibold px-2 py-0.5 rounded-full border ${statusBadgeClass(t.status)}">${escapeHtml(t.status)}</span>
-                </div>
-                <p class="text-xs text-slate-500 mt-0.5 truncate">${escapeHtml(t.shortLabel)} &middot; Watered ${escapeHtml(t.lastWatered)} &middot; ${escapeHtml(t.planter)}</p>
-              </div>
-              <button type="button" data-action="passport" data-id="${escapeHtml(t.id)}" class="shrink-0 px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-emerald-50 text-slate-700 hover:text-emerald-800 text-xs font-semibold transition">
-                QR Passport
-              </button>
-            </div>
-          `).join('');
-        }
-
-        renderCharts();
-      }
-
-      function renderCharts() {
-        if (typeof Chart === 'undefined') return;
-
-        const speciesCounts = {};
-        state.trees.forEach((t) => {
-          speciesCounts[t.species] = (speciesCounts[t.species] || 0) + 1;
-        });
-        const spLabels = Object.keys(speciesCounts);
-        const spData = Object.values(speciesCounts);
-        const palette = ['#059669', '#0d9488', '#16a34a', '#65a30d', '#d97706', '#0284c7', '#7c3aed', '#db2777'];
-
-        const ctxSp = document.getElementById('chart-species');
-        if (ctxSp) {
-          if (speciesChart) speciesChart.destroy();
-          speciesChart = new Chart(ctxSp, {
-            type: 'doughnut',
-            data: {
-              labels: spLabels.length ? spLabels : ['No trees logged yet'],
-              datasets: [{
-                data: spData.length ? spData : [1],
-                backgroundColor: spLabels.length ? palette.slice(0, spLabels.length) : ['#e2e8f0'],
-                borderWidth: 2,
-                borderColor: '#ffffff'
-              }]
-            },
-            options: {
-              responsive: true,
-              maintainAspectRatio: false,
-              cutout: '62%',
-              plugins: {
-                legend: { position: 'bottom', labels: { boxWidth: 12, padding: 14, font: { size: 11 } } }
-              }
-            }
-          });
-        }
-
-        const locMap = {};
-        state.trees.forEach((t) => {
-          const key = t.city || t.shortLabel || 'Location';
-          if (!locMap[key]) locMap[key] = { Healthy: 0, 'Needs Water': 0, 'At Risk': 0 };
-          if (locMap[key][t.status] !== undefined) locMap[key][t.status]++;
-        });
-        const zLabels = Object.keys(locMap);
-        const hasZones = zLabels.length > 0;
-        const zHealthy = hasZones ? Object.values(locMap).map((v) => v.Healthy) : [0];
-        const zWater = hasZones ? Object.values(locMap).map((v) => v['Needs Water']) : [0];
-        const zRisk = hasZones ? Object.values(locMap).map((v) => v['At Risk']) : [0];
-
-        const ctxZn = document.getElementById('chart-zones');
-        if (ctxZn) {
-          if (zoneChart) zoneChart.destroy();
-          zoneChart = new Chart(ctxZn, {
-            type: 'bar',
-            data: {
-              labels: hasZones ? zLabels : ['No locations logged yet'],
-              datasets: [
-                { label: 'Healthy', data: zHealthy, backgroundColor: '#059669', borderRadius: 4 },
-                { label: 'Needs Water', data: zWater, backgroundColor: '#f59e0b', borderRadius: 4 },
-                { label: 'At Risk', data: zRisk, backgroundColor: '#e11d48', borderRadius: 4 }
-              ]
-            },
-            options: {
-              responsive: true,
-              maintainAspectRatio: false,
-              scales: {
-                x: { stacked: true, grid: { display: false }, ticks: { font: { size: 11 } } },
-                y: { stacked: true, beginAtZero: true, suggestedMax: 3, ticks: { stepSize: 1, precision: 0 } }
-              },
-              plugins: {
-                legend: { position: 'bottom', labels: { boxWidth: 12, padding: 14, font: { size: 11 } } }
-              }
-            }
-          });
-        }
-      }
-
-      // ==================== RENDERING: REGISTRY ====================
-      function renderRegistry() {
-        const q = (document.getElementById('filter-search').value || '').trim().toLowerCase();
-        const st = document.getElementById('filter-status').value;
-        const sg = document.getElementById('filter-stage').value;
-
-        const filtered = state.trees.filter((t) => {
-          const matchesQ = !q ||
-            t.id.toLowerCase().includes(q) ||
-            t.species.toLowerCase().includes(q) ||
-            (t.fullAddress || '').toLowerCase().includes(q) ||
-            (t.city || '').toLowerCase().includes(q) ||
-            t.planter.toLowerCase().includes(q);
-          const matchesSt = st === 'all' || t.status === st;
-          const matchesSg = sg === 'all' || t.stage === sg;
-          return matchesQ && matchesSt && matchesSg;
-        });
-
-        document.getElementById('registry-count-badge').textContent = `Showing ${filtered.length} of ${state.trees.length} trees`;
-
-        const grid = document.getElementById('registry-grid');
-        if (state.trees.length === 0) {
-          grid.innerHTML = `
-            <div class="col-span-full bg-white rounded-2xl p-10 text-center border border-slate-200/80 space-y-3">
-              <p class="text-base font-bold text-slate-800">No trees registered yet</p>
-              <p class="text-xs text-slate-500 max-w-md mx-auto">Click below to search a real city, state, or country address and log your first tree.</p>
-              <button type="button" data-action="open-add" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold transition">Log First Tree</button>
-            </div>
-          `;
-          return;
-        }
-
-        if (filtered.length === 0) {
-          grid.innerHTML = `
-            <div class="col-span-full bg-white rounded-2xl p-8 text-center border border-slate-200/80">
-              <p class="text-sm font-semibold text-slate-700">No trees match your current filters.</p>
-              <p class="text-xs text-slate-500 mt-1">Clear the search box or status filter to view all logged entries.</p>
-            </div>
-          `;
-          return;
-        }
-
-        grid.innerHTML = filtered.map((t) => `
-          <article class="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden flex flex-col justify-between">
-            ${t.photo ? `<img src="${t.photo}" alt="${escapeHtml(t.species)}" class="w-full h-36 object-cover border-b border-slate-100" />` : ''}
-            <div class="p-4 space-y-3 flex-1">
-              <div class="flex items-start justify-between gap-2">
-                <div>
-                  <span class="text-[11px] font-bold text-emerald-700 tracking-wide">${escapeHtml(t.id)} &middot; ${escapeHtml(t.stage)}</span>
-                  <h3 class="text-base font-bold text-slate-900 leading-snug">${escapeHtml(t.species)}</h3>
-                  ${t.botanical ? `<p class="text-xs italic text-slate-500">${escapeHtml(t.botanical)}</p>` : ''}
-                </div>
-                <span class="shrink-0 text-[11px] font-semibold px-2.5 py-1 rounded-full border ${statusBadgeClass(t.status)}">${escapeHtml(t.status)}</span>
-              </div>
-
-              <div class="text-xs text-slate-600 space-y-1.5 bg-slate-50 rounded-xl p-2.5">
-                <div>
-                  <span class="text-slate-500 block text-[11px]">Address:</span>
-                  <span class="font-semibold text-slate-800 leading-snug block">${escapeHtml(t.fullAddress)}</span>
-                </div>
-                <div class="flex items-center justify-between pt-1 border-t border-slate-200/60">
-                  <span class="text-slate-500">Last Watered:</span>
-                  <span class="font-medium text-slate-800">${escapeHtml(t.lastWatered)}</span>
-                </div>
-                <div class="flex items-center justify-between">
-                  <span class="text-slate-500">Planter:</span>
-                  <span class="font-medium text-slate-800 truncate max-w-[160px]">${escapeHtml(t.planter)}</span>
-                </div>
-              </div>
-
-              ${t.notes ? `<p class="text-xs text-slate-600 leading-relaxed">${escapeHtml(t.notes)}</p>` : ''}
-            </div>
-
-            <div class="px-4 py-3 bg-slate-50/70 border-t border-slate-100 flex items-center justify-between gap-2">
-              <div class="flex items-center gap-1.5">
-                <button type="button" data-action="water" data-id="${escapeHtml(t.id)}" class="px-2.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold transition">
-                  Water Today
-                </button>
-                <button type="button" data-action="cycle-status" data-id="${escapeHtml(t.id)}" class="px-2.5 py-1.5 rounded-lg bg-white border border-slate-200 hover:bg-slate-100 text-slate-700 text-xs font-semibold transition">
-                  Audit Status
-                </button>
-              </div>
-              <div class="flex items-center gap-1">
-                <button type="button" data-action="passport" data-id="${escapeHtml(t.id)}" class="p-1.5 rounded-lg text-slate-600 hover:bg-emerald-50 hover:text-emerald-700 transition" title="Open Scannable QR Passport">
-                  <i data-lucide="qr-code" class="w-4 h-4"></i>
-                </button>
-                <button type="button" data-action="delete" data-id="${escapeHtml(t.id)}" class="p-1.5 rounded-lg text-slate-400 hover:bg-rose-50 hover:text-rose-600 transition" title="Delete Entry">
-                  <i data-lucide="trash-2" class="w-4 h-4"></i>
-                </button>
-              </div>
-            </div>
-          </article>
-        `).join('');
-
-        if (typeof lucide !== 'undefined') lucide.createIcons();
-      }
-
-      // ==================== RENDERING: SAVED RECORDS (PERSISTENT LOGBOOK) ====================
-      function renderSavedRecords() {
-        const badge = document.getElementById('saved-total-badge');
-        badge.textContent = `${state.trees.length} Saved`;
-
-        const container = document.getElementById('saved-records-container');
-        if (state.trees.length === 0) {
-          container.innerHTML = `
-            <div class="bg-white rounded-2xl p-10 text-center border border-slate-200/80 space-y-3">
-              <p class="text-base font-bold text-slate-800">No saved records yet</p>
-              <p class="text-xs text-slate-500 max-w-md mx-auto">Whenever you register a tree with an address, it will automatically appear and remain stored here—even after you refresh or close the browser.</p>
-              <button type="button" data-action="open-add" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold transition">Register First Tree</button>
-            </div>
-          `;
-          return;
-        }
-
-        container.innerHTML = state.trees.map((t, index) => `
-          <div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/80 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div class="flex items-start gap-3.5 min-w-0">
-              <div class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-700 font-extrabold text-xs flex items-center justify-center shrink-0 border border-emerald-200">
-                #${state.trees.length - index}
-              </div>
-              <div class="min-w-0 space-y-1">
-                <div class="flex items-center gap-2 flex-wrap">
-                  <span class="text-xs font-bold text-emerald-700">${escapeHtml(t.id)}</span>
-                  <h3 class="text-sm sm:text-base font-bold text-slate-900">${escapeHtml(t.species)}</h3>
-                  <span class="text-[11px] font-semibold px-2 py-0.5 rounded-full border ${statusBadgeClass(t.status)}">${escapeHtml(t.status)}</span>
-                  <span class="text-[11px] font-medium px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">${escapeHtml(t.stage)}</span>
-                </div>
-                <p class="text-xs text-slate-700 font-medium leading-relaxed">${escapeHtml(t.fullAddress)}</p>
-                <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-slate-500">
-                  <span>Planted: <strong class="text-slate-700">${escapeHtml(t.plantedDate)}</strong></span>
-                  <span>Watered: <strong class="text-slate-700">${escapeHtml(t.lastWatered)}</strong></span>
-                  <span>By: <strong class="text-slate-700">${escapeHtml(t.planter)}</strong></span>
-                  <span>Est. CO<sub>2</sub>: <strong class="text-emerald-700">${CO2_BY_STAGE[t.stage] || 4} kg/yr</strong></span>
-                </div>
-                ${t.notes ? `<p class="text-xs text-slate-500 italic">Note: ${escapeHtml(t.notes)}</p>` : ''}
-              </div>
-            </div>
-
-            <div class="flex items-center gap-2 shrink-0 self-end sm:self-center">
-              <button type="button" data-action="passport" data-id="${escapeHtml(t.id)}" class="px-3 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs font-semibold transition inline-flex items-center gap-1">
-                <i data-lucide="qr-code" class="w-3.5 h-3.5"></i>
-                <span>QR Passport</span>
-              </button>
-              <button type="button" data-action="delete" data-id="${escapeHtml(t.id)}" class="p-1.5 rounded-xl text-slate-400 hover:bg-rose-50 hover:text-rose-600 transition" title="Remove Saved Record">
-                <i data-lucide="trash-2" class="w-4 h-4"></i>
-              </button>
-            </div>
-          </div>
-        `).join('');
-
-        if (typeof lucide !== 'undefined') lucide.createIcons();
-      }
-
-      // ==================== NAVIGATION & MODALS ====================
-      function switchTab(tabName) {
-        state.activeTab = tabName;
-        document.querySelectorAll('.tab-panel').forEach((p) => p.classList.remove('active'));
-        const target = document.getElementById(`view-${tabName}`);
-        if (target) target.classList.add('active');
-
-        document.querySelectorAll('.nav-btn').forEach((btn) => {
-          const isActive = btn.dataset.nav === tabName;
-          btn.className = isActive
-            ? 'nav-btn px-3.5 py-1.5 rounded-lg text-sm font-semibold transition flex items-center gap-1.5 bg-white text-emerald-700 shadow-sm'
-            : 'nav-btn px-3.5 py-1.5 rounded-lg text-sm font-medium transition flex items-center gap-1.5 text-slate-600 hover:text-slate-900';
-        });
-
-        document.querySelectorAll('.mobile-nav-btn').forEach((btn) => {
-          const isActive = btn.dataset.nav === tabName;
-          btn.className = isActive
-            ? 'mobile-nav-btn flex flex-col items-center justify-center py-1 rounded-xl text-[11px] font-semibold text-emerald-700 bg-emerald-50'
-            : 'mobile-nav-btn flex flex-col items-center justify-center py-1 rounded-xl text-[11px] font-medium text-slate-500';
-        });
-      }
-
-      function openModal(id) {
-        const el = document.getElementById(id);
-        if (el) el.classList.add('open');
-      }
-
-      function closeModal(id) {
-        const el = document.getElementById(id);
-        if (el) el.classList.remove('open');
-      }
-
-      function openConfirm(title, message, onProceed) {
-        document.getElementById('confirm-title').textContent = title;
-        document.getElementById('confirm-message').textContent = message;
-        state.pendingConfirmAction = onProceed;
-        openModal('modal-confirm');
-      }
-
-      function openPassportModal(treeId) {
-        const t = state.trees.find((item) => item.id === treeId);
-        if (!t) return;
-        const co2 = CO2_BY_STAGE[t.stage] || 4;
-        document.getElementById('passport-id').textContent = `${t.id} — ${t.species}`;
-
-        const baseHref = window.location.href.split('?')[0];
-        const qrPayload = baseHref.startsWith('http')
-          ? `${baseHref}?tree=${encodeURIComponent(t.id)}`
-          : `VanaRaksha | ${t.id} | ${t.species} | ${t.shortLabel}`;
-
-        document.getElementById('passport-body').innerHTML = `
-          <div class="flex items-center gap-4">
-            ${buildRealQRMarkup(qrPayload)}
-            <div class="space-y-1 text-xs min-w-0">
-              <div class="font-bold text-slate-900 text-sm">${escapeHtml(t.species)}</div>
-              ${t.botanical ? `<div class="italic text-slate-500">${escapeHtml(t.botanical)}</div>` : ''}
-              <span class="inline-block font-semibold px-2 py-0.5 rounded-full border ${statusBadgeClass(t.status)}">${escapeHtml(t.status)}</span>
-              <div class="text-slate-600 pt-1">Est. CO<sub>2</sub>: <strong>${co2} kg/yr</strong></div>
-              <p class="text-[10px] text-slate-400">Scannable QR code encodes this tree record</p>
-            </div>
-          </div>
-          <div class="bg-slate-50 rounded-xl p-3 text-xs space-y-1.5 border border-slate-100">
-            <div><span class="text-slate-500 block">Full Address</span><span class="font-semibold text-slate-800 leading-snug">${escapeHtml(t.fullAddress)}</span></div>
-            <div class="flex justify-between pt-1 border-t border-slate-200/70"><span class="text-slate-500">Planted Date</span><span class="font-medium text-slate-800">${escapeHtml(t.plantedDate)}</span></div>
-            <div class="flex justify-between"><span class="text-slate-500">Last Watered</span><span class="font-medium text-slate-800">${escapeHtml(t.lastWatered)}</span></div>
-            <div class="flex justify-between"><span class="text-slate-500">Logged By</span><span class="font-medium text-slate-800">${escapeHtml(t.planter)}</span></div>
-          </div>
-        `;
-        openModal('modal-passport');
-      }
-
-      // ==================== ACTIONS ====================
-      function renderAll() {
-        renderDashboard();
-        renderRegistry();
-        renderSavedRecords();
-        if (typeof lucide !== 'undefined') lucide.createIcons();
-      }
-
-      function markTreeWatered(id) {
-        const t = state.trees.find((item) => item.id === id);
-        if (!t) return;
-        t.lastWatered = todayISO();
-        if (t.status === 'Needs Water') t.status = 'Healthy';
-        saveState();
-        renderAll();
-        showToast(`${t.id} marked watered today!`);
-      }
-
-      function cycleTreeStatus(id) {
-        const order = ['Healthy', 'Needs Water', 'At Risk'];
-        const t = state.trees.find((item) => item.id === id);
-        if (!t) return;
-        const idx = order.indexOf(t.status);
-        t.status = order[(idx + 1) % order.length];
-        saveState();
-        renderAll();
-        showToast(`${t.id} updated to "${t.status}"`, t.status === 'Healthy' ? 'emerald' : 'amber');
-      }
-
-      function deleteTree(id) {
-        openConfirm(
-          'Delete Saved Tree Record',
-          `Remove ${id} permanently? This updates your Dashboard, Registry, and Saved Records.`,
-          () => {
-            state.trees = state.trees.filter((t) => t.id !== id);
-            saveState();
-            renderAll();
-            showToast(`Removed ${id}`, 'slate');
-          }
-        );
-      }
-
-      function resizePhotoFile(file) {
-        return new Promise((resolve) => {
-          if (!file) return resolve('');
-          const reader = new FileReader();
-          reader.onload = (e) => {
-            const img = new Image();
-            img.onload = () => {
-              const canvas = document.createElement('canvas');
-              const maxW = 480;
-              const scale = Math.min(1, maxW / img.width);
-              canvas.width = Math.round(img.width * scale);
-              canvas.height = Math.round(img.height * scale);
-              const ctx = canvas.getContext('2d');
-              ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-              resolve(canvas.toDataURL('image/jpeg', 0.72));
-            };
-            img.onerror = () => resolve('');
-            img.src = e.target.result;
-          };
-          reader.onerror = () => resolve('');
-          reader.readAsDataURL(file);
-        });
-      }
-
-      // ==================== EVENT WIRING ====================
-      function bindEvents() {
-        document.querySelectorAll('[data-nav]').forEach((btn) => {
-          btn.addEventListener('click', () => switchTab(btn.dataset.nav));
-        });
-
-        document.getElementById('btn-hero-log').addEventListener('click', () => openModal('modal-add-tree'));
-        document.getElementById('btn-hero-saved').addEventListener('click', () => switchTab('saved'));
-        document.getElementById('btn-view-all-saved').addEventListener('click', () => switchTab('saved'));
-        document.getElementById('btn-open-saved-card').addEventListener('click', () => switchTab('saved'));
-        document.getElementById('btn-saved-add-new').addEventListener('click', () => openModal('modal-add-tree'));
-        document.getElementById('btn-onboarding-log').addEventListener('click', () => openModal('modal-add-tree'));
-        document.getElementById('btn-open-add-modal').addEventListener('click', () => openModal('modal-add-tree'));
-
-        document.querySelectorAll('[data-close-modal]').forEach((btn) => {
-          btn.addEventListener('click', () => closeModal(btn.dataset.closeModal));
-        });
-
-        document.getElementById('btn-confirm-proceed').addEventListener('click', () => {
-          const fn = state.pendingConfirmAction;
-          state.pendingConfirmAction = null;
-          closeModal('modal-confirm');
-          if (typeof fn === 'function') fn();
-        });
-
-        // Address search controls
-        const addrInput = document.getElementById('address-search-input');
-        document.getElementById('btn-search-address').addEventListener('click', () => {
-          searchAddresses(addrInput.value);
-        });
-        addrInput.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter') {
-            e.preventDefault();
-            searchAddresses(addrInput.value);
-          }
-        });
-        addrInput.addEventListener('input', () => {
-          if (searchDebounceTimer) clearTimeout(searchDebounceTimer);
-          if (addrInput.value.trim().length >= 4) {
-            searchDebounceTimer = setTimeout(() => searchAddresses(addrInput.value), 550);
-          }
-        });
-
-        document.getElementById('btn-clear-selected-addr').addEventListener('click', () => {
-          state.selectedLocation = null;
-          renderSelectedLocationUI();
-          addrInput.focus();
-        });
-
-        document.getElementById('btn-toggle-manual-addr').addEventListener('click', () => {
-          state.manualAddressMode = !state.manualAddressMode;
-          renderSelectedLocationUI();
-        });
-
-        // Custom species toggle
-        document.getElementById('tree-species').addEventListener('change', (e) => {
-          const wrap = document.getElementById('custom-species-wrap');
-          const customInput = document.getElementById('tree-custom-species');
-          if (e.target.value === 'CUSTOM') {
-            wrap.classList.remove('hidden');
-            customInput.required = true;
-          } else {
-            wrap.classList.add('hidden');
-            customInput.required = false;
-          }
-        });
-
-        // Submit new tree
-        document.getElementById('form-add-tree').addEventListener('submit', async (e) => {
-          e.preventDefault();
-
-          let loc = state.selectedLocation;
-          if (state.manualAddressMode) {
-            const area = document.getElementById('manual-area').value.trim();
-            const city = document.getElementById('manual-city').value.trim();
-            const stName = document.getElementById('manual-state').value.trim();
-            const country = document.getElementById('manual-country').value.trim();
-            const parts = [area, city, stName, country].filter(Boolean);
-            if (parts.length === 0) {
-              showToast('Please enter at least a city or address.', 'rose');
-              return;
-            }
-            loc = {
-              fullAddress: parts.join(', '),
-              city: city || area || parts[0],
-              state: stName,
-              country,
-              shortLabel: [city || area, stName, country].filter(Boolean).join(', '),
-              lat: null,
-              lng: null
-            };
-          } else if (!loc) {
-            showToast('Please search and click an address result (or click "Enter manually").', 'amber');
-            return;
-          }
-
-          const spVal = document.getElementById('tree-species').value;
-          let species = '';
-          let botanical = '';
-          if (spVal === 'CUSTOM') {
-            species = document.getElementById('tree-custom-species').value.trim();
-            botanical = document.getElementById('tree-custom-botanical').value.trim();
-          } else {
-            [species, botanical] = spVal.split('|');
-          }
-
-          const stage = document.getElementById('tree-stage').value;
-          const status = document.getElementById('tree-status').value;
-          const planter = document.getElementById('tree-planter').value.trim();
-          const notes = document.getElementById('tree-notes').value.trim();
-          const photoInput = document.getElementById('tree-photo');
-          const photoFile = photoInput.files && photoInput.files[0] ? photoInput.files[0] : null;
-
-          if (!species || !planter) {
-            showToast('Please fill in species and planter name.', 'rose');
-            return;
-          }
-
-          const photoData = await resizePhotoFile(photoFile);
-          const nextNum = 1001 + state.trees.length + Math.floor(Math.random() * 90);
-          const newTree = {
-            id: `VR-${nextNum}`,
-            species,
-            botanical,
-            fullAddress: loc.fullAddress,
-            city: loc.city,
-            state: loc.state,
-            country: loc.country,
-            shortLabel: loc.shortLabel,
-            lat: loc.lat,
-            lng: loc.lng,
-            stage,
-            status,
-            planter,
-            plantedDate: todayISO(),
-            lastWatered: todayISO(),
-            notes,
-            photo: photoData
-          };
-
-          state.trees.unshift(newTree);
-          saveState();
-          renderAll();
-
-          // Reset form state cleanly
-          e.target.reset();
-          state.selectedLocation = null;
-          state.manualAddressMode = false;
-          document.getElementById('custom-species-wrap').classList.add('hidden');
-          document.getElementById('address-search-status').textContent = 'Type a place name and click Find, then click a result below to select it.';
-          renderSelectedLocationUI();
-          closeModal('modal-add-tree');
-          showToast(`Saved ${newTree.id} to Saved Records!`);
-        });
-
-        // Registry filters
-        document.getElementById('filter-search').addEventListener('input', renderRegistry);
-        document.getElementById('filter-status').addEventListener('change', renderRegistry);
-        document.getElementById('filter-stage').addEventListener('change', renderRegistry);
-
-        // Clear all data
-        document.getElementById('btn-clear-data').addEventListener('click', () => {
-          openConfirm(
-            'Clear All Saved Records',
-            'This will permanently clear all saved tree records stored in this browser.',
-            () => {
-              state.trees = [];
-              saveState();
-              renderAll();
-              showToast('All saved records cleared.', 'slate');
-            }
-          );
-        });
-
-        // Global delegated actions
-        document.addEventListener('click', (e) => {
-          const btn = e.target.closest('[data-action]');
-          if (!btn) return;
-          const action = btn.dataset.action;
-          const id = btn.dataset.id;
-          if (action === 'water') markTreeWatered(id);
-          else if (action === 'cycle-status') cycleTreeStatus(id);
-          else if (action === 'passport') openPassportModal(id);
-          else if (action === 'delete') deleteTree(id);
-          else if (action === 'open-add') openModal('modal-add-tree');
-        });
-      }
-
-      // ==================== INIT & QR DEEP LINK ====================
-      loadState();
-      bindEvents();
-      renderAll();
-
-      try {
-        const params = new URLSearchParams(window.location.search);
-        const linkedTreeId = params.get('tree');
-        if (linkedTreeId && state.trees.some((t) => t.id === linkedTreeId)) {
-          openPassportModal(linkedTreeId);
-        }
-      } catch (err) {
-        // ignore URL param errors
-      }
-    })();
-  </script>
-</body>
-</html>
+              <button type="butt
